@@ -1,103 +1,74 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>酒精換算器 alcohol-check</title>
+  <title>酒精單位換算器</title>
   <style>
-    body { font-family: Arial; max-width: 400px; margin:auto; padding:20px; }
-    .hidden { display:none; }
-    input, select, button { width: 100%; margin: 8px 0; padding: 8px; }
-    table { width:100%; border-collapse:collapse; margin-top:10px; }
-    td, th { border:1px solid #ccc; padding:5px; text-align:center; }
+    td, th { border: 1px solid #ccc; padding: 5px; text-align: center; }
   </style>
 </head>
 <body>
   <h2>酒精單位換算器</h2>
   <button id="switchMode">切換到登入模式</button>
 
+  <!-- 👥 訪客模式 -->
   <div id="guestMode">
-    <h3>◆ 試算模式（不儲存）</h3>
+    <h3>👉 訪客模式（不需登入）</h3>
+    <label>請選擇酒類：</label>
     <select id="drinkGuest">
-      <option value="5">啤酒 5%</option>
-      <option value="12">紅酒 12%</option>
-      <option value="15">清酒 15%</option>
-      <option value="58">高粱 58%</option>
-      <option value="40">威士忌 40%</option>
-      <option value="20">米酒 20%</option>
+      <option value="1.2">罐裝啤酒（350cc）</option>
+      <option value="2.7">瓶裝啤酒（600cc）</option>
+      <option value="6.3">葡萄酒／紅酒（600cc）</option>
+      <option value="13.2">米酒（600cc）</option>
+      <option value="22.8">38度高粱（600cc）</option>
+      <option value="34.8">58度高粱（600cc）</option>
+      <option value="24">白蘭地（600cc）</option>
+      <option value="9.6">紹興酒（600cc）</option>
+      <option value="28">威士忌（700cc）</option>
+      <option value="30">米特加（750cc）</option>
+      <option value="17.4">58度高粱（300cc）</option>
+      <option value="9">參茸酒（300cc）</option>
     </select>
-    <input id="mlGuest" type="number" placeholder="飲用量 (ml)">
+    <br><br>
+    <label>飲用量（ml）：</label>
+    <input id="mlGuest" type="number" placeholder="請輸入ml">
     <button onclick="calcGuest()">換算</button>
     <div id="resultGuest"></div>
   </div>
 
+  <!-- 🔐 登入模式 -->
   <div id="loginMode" class="hidden">
-    <h3>◆ 登入模式（可儲存）</h3>
-    <select id="drinkLogin">
-      <option value="5">啤酒 5%</option>
-      <option value="12">紅酒 12%</option>
-      <option value="15">清酒 15%</option>
-      <option value="58">高粱 58%</option>
-      <option value="40">威士忌 40%</option>
-      <option value="20">米酒 20%</option>
-    </select>
-    <input id="mlLogin" type="number" placeholder="飲用量 (ml)">
-    <button onclick="calcLogin()">儲存記錄</button>
-    <div id="resultLogin"></div>
-    <h4>歷史紀錄</h4>
-    <table id="logTable">
-      <tr><th>日期</th><th>酒類 %</th><th>ml</th><th>單位</th></tr>
-    </table>
-    <div id="sumPerDay"></div>
+    <h3>登入模式（可儲存記錄）</h3>
+    <!-- 可擴充區塊 -->
   </div>
 
   <script>
-    const switchBtn = document.getElementById('switchMode');
-    switchBtn.addEventListener('click', () => {
-      document.getElementById('guestMode').classList.toggle('hidden');
-      document.getElementById('loginMode').classList.toggle('hidden');
-      switchBtn.textContent = switchBtn.textContent.includes('登入') ? '切換到試算模式' : '切換到登入模式';
-    });
-
-    function calcGuest(){
-      const p = +document.getElementById('drinkGuest').value;
-      const ml = +document.getElementById('mlGuest').value;
-      const g = ml * p/100 * 0.789;
-      const u = (g/10).toFixed(2);
-      document.getElementById('resultGuest').textContent = `酒精單位：${u}`;
+    function calcGuest() {
+      const percentage = parseFloat(document.getElementById('drinkGuest').value);
+      const ml = parseFloat(document.getElementById('mlGuest').value);
+      if (isNaN(percentage) || isNaN(ml)) {
+        document.getElementById('resultGuest').innerText = '請輸入有效資料';
+        return;
+      }
+      const grams = ml * (percentage / 100) * 0.789;
+      const units = grams / 10;
+      document.getElementById('resultGuest').innerText =
+        `換算結果：約 ${units.toFixed(1)} 單位（純酒精約 ${grams.toFixed(1)} 克）`;
     }
 
-    function calcLogin(){
-      const p = +document.getElementById('drinkLogin').value;
-      const ml = +document.getElementById('mlLogin').value;
-      const g = ml * p/100 * 0.789;
-      const u = +((g/10).toFixed(2));
-      const date = new Date().toISOString().split('T')[0];
-      const logs = JSON.parse(localStorage.getItem('logs')||'[]');
-      logs.push({date,p,ml,u});
-      localStorage.setItem('logs', JSON.stringify(logs));
-      renderLogs();
-      document.getElementById('resultLogin').textContent = `本次單位：${u}`;
-    }
-
-    function renderLogs(){
-      const logs = JSON.parse(localStorage.getItem('logs')||'[]');
-      const table = document.getElementById('logTable');
-      table.innerHTML = '<tr><th>日期</th><th>酒類 %</th><th>ml</th><th>單位</th></tr>';
-      const today = new Date().toISOString().split('T')[0];
-      let sum = 0;
-      logs.forEach(r => {
-        const row = table.insertRow();
-        row.insertCell().textContent = r.date;
-        row.insertCell().textContent = r.p;
-        row.insertCell().textContent = r.ml;
-        row.insertCell().textContent = r.u;
-        if(r.date===today) sum += r.u;
-      });
-      document.getElementById('sumPerDay').textContent = `今日總單位：${sum.toFixed(2)}`;
-    }
-
-    renderLogs();
+    document.getElementById('switchMode').onclick = function () {
+      const guest = document.getElementById('guestMode');
+      const login = document.getElementById('loginMode');
+      if (guest.classList.contains('hidden')) {
+        guest.classList.remove('hidden');
+        login.classList.add('hidden');
+        this.innerText = '切換到登入模式';
+      } else {
+        guest.classList.add('hidden');
+        login.classList.remove('hidden');
+        this.innerText = '切換到訪客模式';
+      }
+    };
   </script>
 </body>
 </html>
