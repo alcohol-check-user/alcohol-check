@@ -37,6 +37,20 @@
   <!-- 登入模式 -->
   <div id="loginMode" class="hidden">
     <h3>登入模式（可儲存記錄）</h3>
+    <label>請選擇酒類：</label>
+    <select id="drinkLogin">
+      <option value="1.2">罐裝啤酒（350cc）</option>
+      <option value="6.3">葡萄酒 / 紅酒（600cc）</option>
+      <option value="13.2">米酒（600cc）</option>
+      <option value="22.8">38度高粱酒（600cc）</option>
+      <option value="24">58度高粱酒（600cc）</option>
+      <option value="28">威士忌（700cc）</option>
+    </select>
+    <br><br>
+    <label>飲用量（ml）：</label>
+    <input id="mlLogin" type="number" placeholder="請輸入ml">
+    <button onclick="saveRecord()">儲存記錄</button>
+    <div id="resultLogin"></div>
     <div id="history"></div>
     <button onclick="clearHistory()">清除紀錄</button>
   </div>
@@ -50,7 +64,6 @@ function calcGuest() {
     return;
   }
 
-  // 根據不同酒類容量動態設定 fullVolume
   const selectedText = document.getElementById('drinkGuest').options[document.getElementById('drinkGuest').selectedIndex].text;
   const volumeMatch = selectedText.match(/(\d+)cc/);
   const fullVolume = volumeMatch ? parseInt(volumeMatch[1]) : 350;
@@ -58,17 +71,35 @@ function calcGuest() {
   const units = unitPerDrink * ratio;
   const result = `換算結果：約 ${units.toFixed(1)} 單位`;
   document.getElementById('resultGuest').innerText = result;
+}
+
+function saveRecord() {
+  const unitPerDrink = parseFloat(document.getElementById('drinkLogin').value);
+  const ml = parseFloat(document.getElementById('mlLogin').value);
+  if (isNaN(unitPerDrink) || isNaN(ml)) {
+    document.getElementById('resultLogin').innerText = '請輸入有效資料';
+    return;
+  }
+
+  const selectedText = document.getElementById('drinkLogin').options[document.getElementById('drinkLogin').selectedIndex].text;
+  const volumeMatch = selectedText.match(/(\d+)cc/);
+  const fullVolume = volumeMatch ? parseInt(volumeMatch[1]) : 350;
+  const ratio = ml / fullVolume;
+  const units = unitPerDrink * ratio;
+  const result = `本次單位：${units.toFixed(2)}`;
+  document.getElementById('resultLogin').innerText = result;
 
   const record = {
-    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+    date: new Date().toISOString().split('T')[0],
     drink: selectedText,
     ml: ml,
-    unit: units.toFixed(1),
-    date: new Date().toLocaleDateString()
+    unit: units.toFixed(2),
+    percentage: unitPerDrink / fullVolume * 100
   };
   let history = JSON.parse(localStorage.getItem('alcoholHistory') || '[]');
   history.push(record);
   localStorage.setItem('alcoholHistory', JSON.stringify(history));
+  displayHistory();
 }
 
 function displayHistory() {
@@ -77,11 +108,14 @@ function displayHistory() {
     document.getElementById('history').innerText = '目前沒有紀錄';
     return;
   }
-  let html = '<table><tr><th>日期</th><th>時間</th><th>酒類</th><th>飲用量ml</th><th>單位</th></tr>';
+  let today = new Date().toISOString().split('T')[0];
+  let todayTotal = 0;
+  let html = '<table><tr><th>日期</th><th>酒類</th><th>ml</th><th>單位</th></tr>';
   for (const r of history.reverse()) {
-    html += `<tr><td>${r.date}</td><td>${r.time}</td><td>${r.drink}</td><td>${r.ml}</td><td>${r.unit}</td></tr>`;
+    html += `<tr><td>${r.date}</td><td>${r.drink}</td><td>${r.ml}</td><td>${r.unit}</td></tr>`;
+    if (r.date === today) todayTotal += parseFloat(r.unit);
   }
-  html += '</table>';
+  html += `</table><p>今日總單位：${todayTotal.toFixed(2)}</p>`;
   document.getElementById('history').innerHTML = html;
 }
 
