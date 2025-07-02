@@ -19,19 +19,25 @@
     <h3>🧾 訪客模式（不需登入）</h3>
     <label>請選擇酒類：</label>
     <select id="drinkGuest">
-      <option value="350,1.2">罐裝啤酒（350cc）</option>
-      <option value="600,1.5">葡萄酒 / 紅酒（600cc）</option>
-      <option value="600,3">米酒（600cc）</option>
-      <option value="600,5">38度高粱酒（600cc）</option>
-      <option value="600,6.5">58度高粱酒（600cc）</option>
-      <option value="700,6.5">威士忌（700cc）</option>
+      <option value="1.2|350">罐裝啤酒（350cc）：1.2</option>
+      <option value="6.3|600">葡萄酒 / 紅酒（600cc）：6.3</option>
+      <option value="13.2|600">米酒（600cc）：13.2</option>
+      <option value="22.8|600">38度高粱酒（600cc）：22.8</option>
+      <option value="28|700">威士忌（700cc）：28</option>
+      <option value="34.8|600">58度高粱酒（600cc）：34.8</option>
+      <option value="24|600">白蘭地（600cc）：24</option>
+      <option value="4.8|600">保力達 / 維士比（600cc）：4.8</option>
+      <option value="9.6|600">絕興酒（600cc）：9.6</option>
+      <option value="9|300">參茸酒（300cc）：9</option>
+      <option value="17.4|300">58度高粱酒（300cc）：17.4</option>
+      <option value="30|750">威特加（750cc）：30</option>
     </select>
     <br><br>
     <label>飲用量（ml）：</label>
     <input id="mlGuest" type="number" placeholder="請輸入ml">
     <button onclick="calcGuest()">換算</button>
     <div id="resultGuest"></div>
-    <p style="font-size: 0.9em; color: gray;">※ 建議每日酒精攝取量：男性不超過 2 單位，女性不超過 1 單位</p>
+    <p style="font-size: 0.9em; color: gray;">※ 建議每日酒精攝取量：男性不超過 <strong>2 單位</strong>，女性不超過 <strong>1 單位</strong></p>
   </div>
 
   <!-- 登入模式 -->
@@ -39,12 +45,18 @@
     <h3>登入模式（可儲存記錄）</h3>
     <label>請選擇酒類：</label>
     <select id="drinkLogin">
-      <option value="350,1.2">罐裝啤酒（350cc）</option>
-      <option value="600,1.5">葡萄酒 / 紅酒（600cc）</option>
-      <option value="600,3">米酒（600cc）</option>
-      <option value="600,5">38度高粱酒（600cc）</option>
-      <option value="600,6.5">58度高粱酒（600cc）</option>
-      <option value="700,6.5">威士忌（700cc）</option>
+      <option value="1.2|350">罐裝啤酒（350cc）：1.2</option>
+      <option value="6.3|600">葡萄酒 / 紅酒（600cc）：6.3</option>
+      <option value="13.2|600">米酒（600cc）：13.2</option>
+      <option value="22.8|600">38度高粱酒（600cc）：22.8</option>
+      <option value="28|700">威士忌（700cc）：28</option>
+      <option value="34.8|600">58度高粱酒（600cc）：34.8</option>
+      <option value="24|600">白蘭地（600cc）：24</option>
+      <option value="4.8|600">保力達 / 維士比（600cc）：4.8</option>
+      <option value="9.6|600">絕興酒（600cc）：9.6</option>
+      <option value="9|300">參茸酒（300cc）：9</option>
+      <option value="17.4|300">58度高粱酒（300cc）：17.4</option>
+      <option value="30|750">威特加（750cc）：30</option>
     </select>
     <br><br>
     <label>飲用量（ml）：</label>
@@ -57,14 +69,8 @@
 
 <script>
 function calcGuest() {
-  const selected = document.getElementById('drinkGuest').value.split(',');
-  const fullVolume = parseFloat(selected[0]);
-  const unitPerDrink = parseFloat(selected[1]);
+  const [unitPerDrink, fullVolume] = document.getElementById('drinkGuest').value.split('|').map(parseFloat);
   const ml = parseFloat(document.getElementById('mlGuest').value);
-  if (isNaN(unitPerDrink) || isNaN(ml)) {
-    document.getElementById('resultGuest').innerText = '請輸入有效資料';
-    return;
-  }
   const ratio = ml / fullVolume;
   const units = unitPerDrink * ratio;
   const result = `換算結果：約 ${units.toFixed(1)} 單位`;
@@ -72,26 +78,20 @@ function calcGuest() {
 }
 
 function saveRecord() {
-  const selected = document.getElementById('drinkLogin');
-  const selectedVal = selected.value.split(',');
-  const fullVolume = parseFloat(selectedVal[0]);
-  const unitPerDrink = parseFloat(selectedVal[1]);
-  const drinkText = selected.options[selected.selectedIndex].text;
+  const [unitPerDrink, fullVolume] = document.getElementById('drinkLogin').value.split('|').map(parseFloat);
   const ml = parseFloat(document.getElementById('mlLogin').value);
-  if (isNaN(unitPerDrink) || isNaN(ml)) {
-    document.getElementById('resultLogin').innerText = '請輸入有效資料';
-    return;
-  }
+  const selectedText = document.getElementById('drinkLogin').selectedOptions[0].text;
   const ratio = ml / fullVolume;
   const units = unitPerDrink * ratio;
   const result = `本次單位：${units.toFixed(2)}`;
   document.getElementById('resultLogin').innerText = result;
 
   const now = new Date();
+  const time = now.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
   const record = {
     date: now.toISOString().split('T')[0],
-    time: now.toLocaleTimeString(),
-    drink: drinkText,
+    time: time,
+    drink: selectedText,
     ml: ml,
     unit: units.toFixed(2)
   };
@@ -107,14 +107,14 @@ function displayHistory() {
     document.getElementById('history').innerText = '目前沒有紀錄';
     return;
   }
-  let today = new Date().toISOString().split('T')[0];
-  let todayTotal = 0;
   let html = '<table><tr><th>日期</th><th>時間</th><th>酒類</th><th>飲用量ml</th><th>單位</th></tr>';
-  for (const r of history.reverse()) {
+  let today = new Date().toISOString().split('T')[0];
+  let total = 0;
+  for (let r of history.reverse()) {
     html += `<tr><td>${r.date}</td><td>${r.time}</td><td>${r.drink}</td><td>${r.ml}</td><td>${r.unit}</td></tr>`;
-    if (r.date === today) todayTotal += parseFloat(r.unit);
+    if (r.date === today) total += parseFloat(r.unit);
   }
-  html += `</table><p>今日總單位：${todayTotal.toFixed(2)}</p>`;
+  html += `</table><p><strong>今日總單位：${total.toFixed(2)}</strong></p>`;
   document.getElementById('history').innerHTML = html;
 }
 
