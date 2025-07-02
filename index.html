@@ -4,55 +4,66 @@
   <meta charset="UTF-8">
   <title>酒精單位換算器</title>
   <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      padding: 20px;
-      background-color: #fff;
-    }
-    select, input, button {
-      margin-top: 8px;
-    }
+    td, th { border: 1px solid #ccc; padding: 5px; text-align: center; }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
   <h2>酒精單位換算器</h2>
-  <button id="switchMode">🔁切換到登入模式</button>
+  <button id="switchMode">🔄切換到登入模式</button>
 
-  <!-- 👥 訪客模式 -->
+  <!-- 👤 訪客模式 -->
   <div id="guestMode">
     <h3>👉 訪客模式（不需登入）</h3>
     <label>請選擇酒類：</label>
     <select id="drinkGuest">
       <option value="1.2">罐裝啤酒（350cc）</option>
-      <option value="2.7">瓶裝啤酒（600cc）</option>
       <option value="6.3">葡萄酒／紅酒（600cc）</option>
-      <option value="9">參茸酒（300cc）</option>
-      <option value="9.6">紹興酒（600cc）</option>
+      <option value="2.7">瓶裝啤酒（600cc）</option>
       <option value="13.2">米酒（600cc）</option>
-      <option value="17.4">58度高粱（300cc）</option>
-      <option value="21">米酒頭（600cc）</option>
       <option value="22.8">38度高粱（600cc）</option>
+      <option value="17.4">58度高粱酒（300cc）</option>
       <option value="24">白蘭地（600cc）</option>
-      <option value="28">威士忌（700cc）</option>
+      <option value="21">米酒頭（600cc）</option>
+      <option value="9.6">紹興酒（600cc）</option>
       <option value="30">伏特加（750cc）</option>
-      <option value="34.8">58度高粱（600cc）</option>
-      <option value="4.8">保力達、維士比（600cc）</option>
+      <option value="28">威士忌（700cc）</option>
+      <option value="9">參茸酒（300cc）</option>
     </select>
     <br><br>
     <label>飲用量（ml）：</label>
     <input id="mlGuest" type="number" placeholder="請輸入ml">
     <button onclick="calcGuest()">換算</button>
-    <div id="resultGuest" style="margin-top: 10px;"></div>
-    <p style="font-size: 14px; color: gray;">
-      ※ 建議每日酒精攝取量：男性不超過 <strong>2</strong> 單位，女性不超過 <strong>1</strong> 單位
-    </p>
+    <div id="resultGuest"></div>
+    <div><small>每日建議：男性 ≤ 2 單位；女性 ≤ 1 單位</small></div>
   </div>
 
-  <!-- 🛡️ 登入模式 -->
+  <!-- 🧑‍💻 登入模式 -->
   <div id="loginMode" class="hidden">
     <h3>登入模式（可儲存記錄）</h3>
-    <!-- 此處可加入登入後的功能 -->
-    <p>🚧 功能建置中，敬請期待！</p>
+    <label>請選擇酒類：</label>
+    <select id="drinkLogin">
+      <option value="1.2">罐裝啤酒（350cc）</option>
+      <option value="6.3">葡萄酒／紅酒（600cc）</option>
+      <option value="2.7">瓶裝啤酒（600cc）</option>
+      <option value="13.2">米酒（600cc）</option>
+      <option value="22.8">38度高粱（600cc）</option>
+      <option value="17.4">58度高粱酒（300cc）</option>
+      <option value="24">白蘭地（600cc）</option>
+      <option value="21">米酒頭（600cc）</option>
+      <option value="9.6">紹興酒（600cc）</option>
+      <option value="30">伏特加（750cc）</option>
+      <option value="28">威士忌（700cc）</option>
+      <option value="9">參茸酒（300cc）</option>
+    </select>
+    <br><br>
+    <label>飲用量（ml）：</label>
+    <input id="mlLogin" type="number" placeholder="請輸入ml">
+    <button onclick="calcLogin()">換算並儲存</button>
+    <div id="resultLogin"></div>
+    <h4>歷史紀錄</h4>
+    <ul id="historyList"></ul>
+    <div><small>每日建議：男性 ≤ 2 單位；女性 ≤ 1 單位</small></div>
   </div>
 
   <script>
@@ -65,26 +76,40 @@
       }
       const grams = ml * (percentage / 100) * 0.789;
       const units = grams / 10;
-      document.getElementById('resultGuest').innerText =
-        `換算結果：約 ${units.toFixed(1)} 單位（純酒精約 ${grams.toFixed(1)} 克）`;
+      document.getElementById('resultGuest').innerText = `換算結果：約 ${units.toFixed(1)} 單位（純酒精約 ${grams.toFixed(1)} 克）`;
+    }
+
+    function calcLogin() {
+      const percentage = parseFloat(document.getElementById('drinkLogin').value);
+      const ml = parseFloat(document.getElementById('mlLogin').value);
+      if (isNaN(percentage) || isNaN(ml)) {
+        document.getElementById('resultLogin').innerText = '請輸入有效資料';
+        return;
+      }
+      const grams = ml * (percentage / 100) * 0.789;
+      const units = grams / 10;
+      const result = `換算結果：約 ${units.toFixed(1)} 單位（純酒精約 ${grams.toFixed(1)} 克）`;
+      document.getElementById('resultLogin').innerText = result;
+
+      const history = document.getElementById('historyList');
+      const li = document.createElement('li');
+      li.innerText = result;
+      history.prepend(li);
     }
 
     document.getElementById('switchMode').onclick = function () {
       const guest = document.getElementById('guestMode');
       const login = document.getElementById('loginMode');
-      if (guest.style.display !== 'none') {
-        guest.style.display = 'none';
-        login.style.display = 'block';
-        this.innerText = '🔁切換到訪客模式';
+      if (guest.classList.contains('hidden')) {
+        guest.classList.remove('hidden');
+        login.classList.add('hidden');
+        this.innerText = '🔄切換到登入模式';
       } else {
-        guest.style.display = 'block';
-        login.style.display = 'none';
-        this.innerText = '🔁切換到登入模式';
+        guest.classList.add('hidden');
+        login.classList.remove('hidden');
+        this.innerText = '🔄切換到訪客模式';
       }
     };
-
-    // 預設登入模式隱藏
-    document.getElementById('loginMode').style.display = 'none';
   </script>
 </body>
 </html>
