@@ -4,19 +4,73 @@
   <meta charset="UTF-8">
   <title>酒精單位換算器</title>
   <style>
-    body { font-family: sans-serif; }
-    .hidden { display: none; }
-    table { border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid #ccc; padding: 5px 10px; }
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      padding: 20px;
+    }
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h3 {
+      color: #555;
+    }
+    .hidden {
+      display: none;
+    }
+    select, input[type="number"], button {
+      padding: 5px 10px;
+      margin: 5px 0;
+      font-size: 16px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #guestMode, #loginMode {
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+    table {
+      border-collapse: collapse;
+      margin-top: 10px;
+      width: 100%;
+      background-color: #fff;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #4CAF50;
+    }
   </style>
 </head>
 <body>
-  <h2>酒精單位換算器</h2>
+  <h2><span class="logo">🍶 SOBER ME</span>酒精單位換算器</h2>
   <button id="switchMode">切換到登入模式</button>
 
   <!-- 訪客模式 -->
   <div id="guestMode">
-    <h3>🗓️ 訪客模式（不需登入）</h3>
+    <h3>🧾 訪客模式（不需登入）</h3>
     <label>請選擇酒類：</label>
     <select id="drinkGuest">
       <option value="1.2|350">罐裝啤酒（350cc）：1.2</option>
@@ -27,11 +81,10 @@
       <option value="34.8|600">58度高粱酒（600cc）：34.8</option>
       <option value="24|600">白蘭地（600cc）：24</option>
       <option value="4.8|600">保力達 / 維士比（600cc）：4.8</option>
-      <option value="9.6|600">紹興酒（600cc）：9.6</option>
+      <option value="9.6|600">絕興酒（600cc）：9.6</option>
       <option value="9|300">參茸酒（300cc）：9</option>
       <option value="17.4|300">58度高粱酒（300cc）：17.4</option>
-      <option value="30|750">伏特加（750cc）：30</option>
-      <option value="21|600">米酒頭（600cc）：21</option>
+      <option value="30|750">威特加（750cc）：30</option>
     </select>
     <br><br>
     <label>飲用量（ml）：</label>
@@ -54,11 +107,10 @@
       <option value="34.8|600">58度高粱酒（600cc）：34.8</option>
       <option value="24|600">白蘭地（600cc）：24</option>
       <option value="4.8|600">保力達 / 維士比（600cc）：4.8</option>
-      <option value="9.6|600">紹興酒（600cc）：9.6</option>
+      <option value="9.6|600">絕興酒（600cc）：9.6</option>
       <option value="9|300">參茸酒（300cc）：9</option>
       <option value="17.4|300">58度高粱酒（300cc）：17.4</option>
-      <option value="30|750">伏特加（750cc）：30</option>
-      <option value="21|600">米酒頭（600cc）：21</option>
+      <option value="30|750">威特加（750cc）：30</option>
     </select>
     <br><br>
     <label>飲用量（ml）：</label>
@@ -75,7 +127,7 @@ function calcGuest() {
   const ml = parseFloat(document.getElementById('mlGuest').value);
   const ratio = ml / fullVolume;
   const units = unitPerDrink * ratio;
-  const result = `換算結果：約 ${units.toFixed(2)} 單位`;
+  const result = `換算結果：約 ${units.toFixed(1)} 單位`;
   document.getElementById('resultGuest').innerText = result;
 }
 
