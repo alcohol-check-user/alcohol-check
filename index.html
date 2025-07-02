@@ -5,67 +5,56 @@
   <title>酒精單位換算器</title>
   <style>
     body {
-      font-family: "Segoe UI", sans-serif;
-      background-color: #f9f9f9;
+      font-family: 'Microsoft JhengHei', sans-serif;
+      background: #fff9f3;
       color: #333;
       padding: 20px;
     }
     h2 {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    h3 {
-      color: #555;
+      color: #e07a5f;
     }
     .hidden {
       display: none;
     }
-    select, input[type="number"], button {
-      padding: 5px 10px;
+    select, input, button {
+      font-size: 1em;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
       margin: 5px 0;
-      font-size: 16px;
     }
     button {
-      background-color: #4CAF50;
+      background-color: #f4a261;
       color: white;
       border: none;
-      border-radius: 5px;
       cursor: pointer;
     }
     button:hover {
-      background-color: #45a049;
-    }
-    #guestMode, #loginMode {
-      background-color: white;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      margin-top: 20px;
+      background-color: #e76f51;
     }
     table {
       border-collapse: collapse;
       margin-top: 10px;
       width: 100%;
-      background-color: #fff;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     th, td {
       border: 1px solid #ccc;
-      padding: 8px;
+      padding: 8px 12px;
       text-align: center;
     }
-    th {
-      background-color: #f2f2f2;
-    }
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
-      color: #4CAF50;
+    .note {
+      font-size: 0.9em;
+      color: #555;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <h2><span class="logo">🍶 SOBER ME</span>酒精單位換算器</h2>
+  <h2>🍃 酒精單位換算器</h2>
   <button id="switchMode">切換到登入模式</button>
 
   <!-- 訪客模式 -->
@@ -91,12 +80,12 @@
     <input id="mlGuest" type="number" placeholder="請輸入ml">
     <button onclick="calcGuest()">換算</button>
     <div id="resultGuest"></div>
-    <p style="font-size: 0.9em; color: gray;">※ 建議每日酒精攝取量：男性不超過 <strong>2 單位</strong>，女性不超過 <strong>1 單位</strong></p>
+    <p class="note">※ 建議每日酒精攝取量：男性不超過 <strong>2 單位</strong>，女性不超過 <strong>1 單位</strong></p>
   </div>
 
   <!-- 登入模式 -->
   <div id="loginMode" class="hidden">
-    <h3>登入模式（可儲存記錄）</h3>
+    <h3>📒 登入模式（可儲存記錄）</h3>
     <label>請選擇酒類：</label>
     <select id="drinkLogin">
       <option value="1.2|350">罐裝啤酒（350cc）：1.2</option>
@@ -120,6 +109,8 @@
     <div id="history"></div>
     <button onclick="clearHistory()">清除紀錄</button>
   </div>
+
+  <p class="note">🌞 每天一小步，戒酒一大步 —— 中榮與你同行 💪</p>
 
 <script>
 function calcGuest() {
