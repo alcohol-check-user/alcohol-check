@@ -2,115 +2,139 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>酒精單位換算器</title>
+  <title>中榮戒飲一臂之力｜酒精單位換算器</title>
   <style>
     body {
-      font-family: 'Microsoft JhengHei', sans-serif;
-      background: #fff9f3;
+      font-family: "Helvetica Neue", sans-serif;
+      background: #f3f8ff;
+      margin: 0;
+      padding: 0;
       color: #333;
-      padding: 20px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      padding: 15px 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    header img {
+      height: 60px;
+      margin-right: 15px;
+    }
+    header h1 {
+      font-size: 1.5em;
+      margin: 0;
+      color: #006699;
+    }
+    header p {
+      margin: 2px 0 0;
+      font-size: 0.95em;
+      color: #666;
+    }
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
     }
     h2 {
-      color: #e07a5f;
+      color: #006699;
     }
-    .hidden {
-      display: none;
-    }
-    select, input, button {
+    label, select, input, button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
       font-size: 1em;
-      padding: 5px;
+    }
+    select, input {
+      padding: 8px;
+      border-radius: 6px;
       border: 1px solid #ccc;
-      border-radius: 8px;
-      margin: 5px 0;
     }
     button {
-      background-color: #f4a261;
-      color: white;
+      background: #1eaaf1;
+      color: #fff;
       border: none;
+      padding: 10px;
+      border-radius: 6px;
       cursor: pointer;
     }
     button:hover {
-      background-color: #e76f51;
+      background: #0d8ecf;
     }
-    table {
-      border-collapse: collapse;
-      margin-top: 10px;
-      width: 100%;
-      background: white;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px 12px;
-      text-align: center;
-    }
-    .note {
-      font-size: 0.9em;
-      color: #555;
-      margin-top: 10px;
-    }
+    .hidden { display: none; }
+    table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 5px 10px; text-align: center; }
+    .gray-note { font-size: 0.9em; color: gray; text-align: center; margin-top: 10px; }
   </style>
 </head>
 <body>
-  <h2>🍃 酒精單位換算器</h2>
-  <button id="switchMode">切換到登入模式</button>
+  <header>
+    <img src="b019a494-1318-469b-ab48-31605803adb8.png" alt="中榮LOGO">
+    <div>
+      <h1>中榮戒飲一臂之力</h1>
+      <p>酒精單位換算器 | 一日一記錄，中榮守護您</p>
+    </div>
+  </header>
 
-  <!-- 訪客模式 -->
-  <div id="guestMode">
-    <h3>🧾 訪客模式（不需登入）</h3>
-    <label>請選擇酒類：</label>
-    <select id="drinkGuest">
-      <option value="1.2|350">罐裝啤酒（350cc）：1.2</option>
-      <option value="6.3|600">葡萄酒 / 紅酒（600cc）：6.3</option>
-      <option value="13.2|600">米酒（600cc）：13.2</option>
-      <option value="22.8|600">38度高粱酒（600cc）：22.8</option>
-      <option value="28|700">威士忌（700cc）：28</option>
-      <option value="34.8|600">58度高粱酒（600cc）：34.8</option>
-      <option value="24|600">白蘭地（600cc）：24</option>
-      <option value="4.8|600">保力達 / 維士比（600cc）：4.8</option>
-      <option value="9.6|600">絕興酒（600cc）：9.6</option>
-      <option value="9|300">參茸酒（300cc）：9</option>
-      <option value="17.4|300">58度高粱酒（300cc）：17.4</option>
-      <option value="30|750">威特加（750cc）：30</option>
-    </select>
-    <br><br>
-    <label>飲用量（ml）：</label>
-    <input id="mlGuest" type="number" placeholder="請輸入ml">
-    <button onclick="calcGuest()">換算</button>
-    <div id="resultGuest"></div>
-    <p class="note">※ 建議每日酒精攝取量：男性不超過 <strong>2 單位</strong>，女性不超過 <strong>1 單位</strong></p>
+  <div class="container">
+    <h2>酒精單位換算器</h2>
+    <button id="switchMode">切換到登入模式</button>
+
+    <!-- 訪客模式 -->
+    <div id="guestMode">
+      <h3>🧾 訪客模式（不需登入）</h3>
+      <label>請選擇酒類：</label>
+      <select id="drinkGuest">
+        <option value="1.2|350">罐裝啤酒（350cc）：1.2</option>
+        <option value="6.3|600">葡萄酒 / 紅酒（600cc）：6.3</option>
+        <option value="13.2|600">米酒（600cc）：13.2</option>
+        <option value="22.8|600">38度高粱酒（600cc）：22.8</option>
+        <option value="28|700">威士忌（700cc）：28</option>
+        <option value="34.8|600">58度高粱酒（600cc）：34.8</option>
+        <option value="24|600">白蘭地（600cc）：24</option>
+        <option value="4.8|600">保力達 / 維士比（600cc）：4.8</option>
+        <option value="9.6|600">絕興酒（600cc）：9.6</option>
+        <option value="9|300">參茸酒（300cc）：9</option>
+        <option value="17.4|300">58度高粱酒（300cc）：17.4</option>
+        <option value="30|750">威特加（750cc）：30</option>
+      </select>
+      <label>飲用量（ml）：</label>
+      <input id="mlGuest" type="number" placeholder="請輸入ml">
+      <button onclick="calcGuest()">換算</button>
+      <div id="resultGuest"></div>
+      <p class="gray-note">※ 建議每日酒精攝取量：男性不超過 <strong>2 單位</strong>，女性不超過 <strong>1 單位</strong></p>
+    </div>
+
+    <!-- 登入模式 -->
+    <div id="loginMode" class="hidden">
+      <h3>登入模式（可儲存記錄）</h3>
+      <label>請選擇酒類：</label>
+      <select id="drinkLogin">
+        <option value="1.2|350">罐裝啤酒（350cc）：1.2</option>
+        <option value="6.3|600">葡萄酒 / 紅酒（600cc）：6.3</option>
+        <option value="13.2|600">米酒（600cc）：13.2</option>
+        <option value="22.8|600">38度高粱酒（600cc）：22.8</option>
+        <option value="28|700">威士忌（700cc）：28</option>
+        <option value="34.8|600">58度高粱酒（600cc）：34.8</option>
+        <option value="24|600">白蘭地（600cc）：24</option>
+        <option value="4.8|600">保力達 / 維士比（600cc）：4.8</option>
+        <option value="9.6|600">絕興酒（600cc）：9.6</option>
+        <option value="9|300">參茸酒（300cc）：9</option>
+        <option value="17.4|300">58度高粱酒（300cc）：17.4</option>
+        <option value="30|750">威特加（750cc）：30</option>
+      </select>
+      <label>飲用量（ml）：</label>
+      <input id="mlLogin" type="number" placeholder="請輸入ml">
+      <button onclick="saveRecord()">儲存記錄</button>
+      <div id="resultLogin"></div>
+      <div id="history"></div>
+      <button onclick="clearHistory()">清除紀錄</button>
+    </div>
   </div>
-
-  <!-- 登入模式 -->
-  <div id="loginMode" class="hidden">
-    <h3>📒 登入模式（可儲存記錄）</h3>
-    <label>請選擇酒類：</label>
-    <select id="drinkLogin">
-      <option value="1.2|350">罐裝啤酒（350cc）：1.2</option>
-      <option value="6.3|600">葡萄酒 / 紅酒（600cc）：6.3</option>
-      <option value="13.2|600">米酒（600cc）：13.2</option>
-      <option value="22.8|600">38度高粱酒（600cc）：22.8</option>
-      <option value="28|700">威士忌（700cc）：28</option>
-      <option value="34.8|600">58度高粱酒（600cc）：34.8</option>
-      <option value="24|600">白蘭地（600cc）：24</option>
-      <option value="4.8|600">保力達 / 維士比（600cc）：4.8</option>
-      <option value="9.6|600">絕興酒（600cc）：9.6</option>
-      <option value="9|300">參茸酒（300cc）：9</option>
-      <option value="17.4|300">58度高粱酒（300cc）：17.4</option>
-      <option value="30|750">威特加（750cc）：30</option>
-    </select>
-    <br><br>
-    <label>飲用量（ml）：</label>
-    <input id="mlLogin" type="number" placeholder="請輸入ml">
-    <button onclick="saveRecord()">儲存記錄</button>
-    <div id="resultLogin"></div>
-    <div id="history"></div>
-    <button onclick="clearHistory()">清除紀錄</button>
-  </div>
-
-  <p class="note">🌞 每天一小步，戒酒一大步 —— 中榮與你同行 💪</p>
 
 <script>
 function calcGuest() {
