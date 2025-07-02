@@ -16,7 +16,7 @@
 
   <!-- 訪客模式 -->
   <div id="guestMode">
-    <h3>🧾 訪客模式（不需登入）</h3>
+    <h3>🗓️ 訪客模式（不需登入）</h3>
     <label>請選擇酒類：</label>
     <select id="drinkGuest">
       <option value="1.2|350">罐裝啤酒（350cc）：1.2</option>
@@ -31,6 +31,7 @@
       <option value="9|300">參茸酒（300cc）：9</option>
       <option value="17.4|300">58度高粱酒（300cc）：17.4</option>
       <option value="30|750">伏特加（750cc）：30</option>
+      <option value="21|600">米酒頭（600cc）：21</option>
     </select>
     <br><br>
     <label>飲用量（ml）：</label>
@@ -57,6 +58,7 @@
       <option value="9|300">參茸酒（300cc）：9</option>
       <option value="17.4|300">58度高粱酒（300cc）：17.4</option>
       <option value="30|750">伏特加（750cc）：30</option>
+      <option value="21|600">米酒頭（600cc）：21</option>
     </select>
     <br><br>
     <label>飲用量（ml）：</label>
@@ -73,7 +75,7 @@ function calcGuest() {
   const ml = parseFloat(document.getElementById('mlGuest').value);
   const ratio = ml / fullVolume;
   const units = unitPerDrink * ratio;
-  const result = `換算結果：約 ${units.toFixed(1)} 單位`;
+  const result = `換算結果：約 ${units.toFixed(2)} 單位`;
   document.getElementById('resultGuest').innerText = result;
 }
 
