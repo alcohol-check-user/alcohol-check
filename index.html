@@ -43,21 +43,25 @@
 
 <script>
 function calcGuest() {
-  const percentage = parseFloat(document.getElementById('drinkGuest').value);
+  const unitPerDrink = parseFloat(document.getElementById('drinkGuest').value);
   const ml = parseFloat(document.getElementById('mlGuest').value);
-  if (isNaN(percentage) || isNaN(ml)) {
+  if (isNaN(unitPerDrink) || isNaN(ml)) {
     document.getElementById('resultGuest').innerText = '請輸入有效資料';
     return;
   }
-  const grams = ml * (percentage / 100) * 0.789;
-  const units = grams / 10;
+
+  // 根據不同酒類容量動態設定 fullVolume
+  const selectedText = document.getElementById('drinkGuest').options[document.getElementById('drinkGuest').selectedIndex].text;
+  const volumeMatch = selectedText.match(/(\d+)cc/);
+  const fullVolume = volumeMatch ? parseInt(volumeMatch[1]) : 350;
+  const ratio = ml / fullVolume;
+  const units = unitPerDrink * ratio;
   const result = `換算結果：約 ${units.toFixed(1)} 單位`;
   document.getElementById('resultGuest').innerText = result;
 
-  const typeText = document.getElementById('drinkGuest').options[document.getElementById('drinkGuest').selectedIndex].text;
   const record = {
     time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-    drink: typeText,
+    drink: selectedText,
     ml: ml,
     unit: units.toFixed(1),
     date: new Date().toLocaleDateString()
