@@ -31,7 +31,9 @@
     <input id="mlGuest" type="number" placeholder="請輸入ml">
     <button onclick="calcGuest()">換算</button>
     <div id="resultGuest"></div>
-    <p style="font-size: 0.9em; color: gray;">※ 建議每日酒精攝取量：男性不超過 2 單位，女性不超過 1 單位</p>
+    <p style="font-size: 0.9em; color: gray;">
+      ⚠️ 建議每日酒精攝取量上限：<strong>男性不超過 2 單位、女性不超過 1 單位</strong>
+    </p>
   </div>
 
   <!-- 登入模式 -->
@@ -51,6 +53,9 @@
     <input id="mlLogin" type="number" placeholder="請輸入ml">
     <button onclick="saveRecord()">儲存記錄</button>
     <div id="resultLogin"></div>
+    <p style="font-size: 0.9em; color: gray;">
+      ⚠️ 建議每日酒精攝取量上限：<strong>男性不超過 2 單位、女性不超過 1 單位</strong>
+    </p>
     <div id="history"></div>
     <button onclick="clearHistory()">清除紀錄</button>
   </div>
@@ -89,12 +94,14 @@ function saveRecord() {
   const result = `本次單位：${units.toFixed(2)}`;
   document.getElementById('resultLogin').innerText = result;
 
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
   const record = {
-    date: new Date().toISOString().split('T')[0],
+    date: now.toISOString().split('T')[0],
+    time: timeStr,
     drink: selectedText,
     ml: ml,
-    unit: units.toFixed(2),
-    percentage: unitPerDrink / fullVolume * 100
+    unit: units.toFixed(2)
   };
   let history = JSON.parse(localStorage.getItem('alcoholHistory') || '[]');
   history.push(record);
@@ -110,9 +117,9 @@ function displayHistory() {
   }
   let today = new Date().toISOString().split('T')[0];
   let todayTotal = 0;
-  let html = '<table><tr><th>日期</th><th>酒類</th><th>ml</th><th>單位</th></tr>';
+  let html = '<table><tr><th>日期</th><th>時間</th><th>酒類</th><th>飲用量ml</th><th>單位</th></tr>';
   for (const r of history.reverse()) {
-    html += `<tr><td>${r.date}</td><td>${r.drink}</td><td>${r.ml}</td><td>${r.unit}</td></tr>`;
+    html += `<tr><td>${r.date}</td><td>${r.time || ''}</td><td>${r.drink}</td><td>${r.ml}</td><td>${r.unit}</td></tr>`;
     if (r.date === today) todayTotal += parseFloat(r.unit);
   }
   html += `</table><p>今日總單位：${todayTotal.toFixed(2)}</p>`;
